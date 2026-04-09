@@ -1,0 +1,26 @@
+{
+  "name": "markdown_report_generator",
+  "description": "Generates a structured markdown report from raw data or analysis. Useful for saving Gemma's findings into a readable format for the user.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "description": "The main title of the report."
+      },
+      "sections": {
+        "type": "array",
+        "description": "An array of sections to include in the report.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "heading": { "type": "string" },
+            "content": { "type": "string" }
+          },
+          "required": ["heading", "content"]
+        }
+      }
+    },
+    "required": ["title", "sections"]
+  }
+}

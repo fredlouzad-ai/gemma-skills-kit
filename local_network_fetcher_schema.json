@@ -1,0 +1,23 @@
+{
+  "name": "local_network_fetcher",
+  "description": "Fetches data from local network devices (like HomeAssistant, smart devices, or local APIs). Will reject non-local IP addresses to maintain privacy.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "ip_address": {
+        "type": "string",
+        "description": "The local IP address or hostname to query (e.g., 192.168.1.100, localhost)."
+      },
+      "path": {
+        "type": "string",
+        "description": "The API path to append to the IP (e.g., /api/status)."
+      },
+      "method": {
+        "type": "string",
+        "enum": ["GET", "POST"],
+        "description": "HTTP method to use."
+      }
+    },
+    "required": ["ip_address", "path"]
+  }
+}
