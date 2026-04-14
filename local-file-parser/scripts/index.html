@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+    <script>
+        window['ai_edge_gallery_get_result'] = async (data) => {
+            try {
+                const parameters = JSON.parse(data);
+                const { fileContent, format } = parameters;
+
+                if (format === 'json') {
+                    const parsedData = JSON.parse(fileContent);
+                    const keyCount = Object.keys(parsedData).length;
+                    return JSON.stringify({
+                        result: {
+                            status: "success",
+                            metadata: { keys: keyCount, type: "JSON" },
+                            preview: JSON.stringify(parsedData).substring(0, 500) + "..."
+                        }
+                    });
+                } 
+                
+                if (format === 'csv') {
+                    const rows = fileContent.split('\n').filter(row => row.trim() !== '');
+                    const headers = rows[0].split(',');
+                    return JSON.stringify({
+                        result: {
+                            status: "success",
+                            metadata: { rowCount: rows.length, columns: headers },
+                            preview: rows.slice(0, 3).join('\n')
+                        }
+                    });
+                }
+
+                throw new Error("Unsupported format. Use 'json' or 'csv'.");
+
+            } catch (e) {
+                console.error(e);
+                return JSON.stringify({
+                    error: `Failed: ${e.message}`
+                });
+            }
+        };
+    </script>
+</body>
+</html>

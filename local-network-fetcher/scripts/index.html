@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head></head>
+<body>
+    <script>
+        window['ai_edge_gallery_get_result'] = async (data) => {
+            try {
+                const parameters = JSON.parse(data);
+                const { ip_address, path, method = "GET" } = parameters;
+
+                // Safety check: Ensure the IP is a local network IP (192.168.x.x, 10.x.x.x, 127.0.0.1, etc.)
+                const isLocalIP = /^(192\.168|10\.|172\.(1[6-9]|2[0-9]|3[0-1])|127\.0\.0\.1|localhost)/.test(ip_address);
+                
+                if (!isLocalIP) {
+                    throw new Error("Security violation: This skill can only query local network IP addresses.");
+                }
+
+                const url = `http://${ip_address}${path.startsWith('/') ? path : '/' + path}`;
+                
+                // In a real environment, this would use fetch(). We mock the response here for the Starter Kit template.
+                // const response = await fetch(url, { method });
+                // const responseData = await response.json();
+
+                return JSON.stringify({
+                    result: {
+                        status: "success",
+                        url_queried: url,
+                        message: "Successfully reached local device.",
+                        mock_data: {
+                            device_status: "online",
+                            uptime: "42 hours",
+                            readings: [12, 15, 9]
+                        }
+                    }
+                });
+
+            } catch (e) {
+                console.error(e);
+                return JSON.stringify({
+                    error: `Failed: ${e.message}`
+                });
+            }
+        };
+    </script>
+</body>
+</html>
