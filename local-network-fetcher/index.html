@@ -17,20 +17,22 @@
 
                 const url = `http://${ip_address}${path.startsWith('/') ? path : '/' + path}`;
                 
-                // In a real environment, this would use fetch(). We mock the response here for the Starter Kit template.
-                // const response = await fetch(url, { method });
-                // const responseData = await response.json();
+                const response = await fetch(url, { method });
+                
+                let responseData;
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                    responseData = await response.json();
+                } else {
+                    responseData = await response.text();
+                }
 
                 return JSON.stringify({
                     result: {
-                        status: "success",
+                        status: response.ok ? "success" : "http_error",
+                        http_status: response.status,
                         url_queried: url,
-                        message: "Successfully reached local device.",
-                        mock_data: {
-                            device_status: "online",
-                            uptime: "42 hours",
-                            readings: [12, 15, 9]
-                        }
+                        data: responseData
                     }
                 });
 
